@@ -7,7 +7,9 @@ def tckimlik(n):
     sum1=(sum(tc[0:9:2]))*7 
     mult=sum(tc[1:8:2])
     result1=sum1-mult
-    if result1%10!=tc[9] and sum(tc[:10])%10!=tc[10]:
+    if result1%10!=tc[9]:
+        return 'not Valid'
+    if sum(tc[:10])%10!=tc[10]:
         return 'not Valid'
     else:
         return 'Valid'
