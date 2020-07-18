@@ -24,6 +24,8 @@ def TcKimlik():
         return render_template('index.html', developer_name = 'Serkan', not_valid = True)
     if len(alpha) != 11:
         return render_template('index.html', developer_name = 'Serkan', not_valid = True)
+    if alpha[0]=='0':
+        return render_template('index.html', developer_name = 'Serkan', not_valid = True)
     number = int(alpha)
     return render_template('result.html', tc_decimal = number, result = tckimlik(number), developer_name = 'Serkan')
 
