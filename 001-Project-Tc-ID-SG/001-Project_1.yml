@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  This template for using create an EC-2 instance. and also create a new security group.
+
+Parameters:
+  KeyName:
+    Description: The EC2 Key Pair to allow SSH access to the instance
+    Type: 'AWS::EC2::KeyPair::KeyName'
+
+Resources:
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-08f3d892de259504d
+      KeyName:
+        Ref : KeyName
+      SecurityGroups:
+        - !Ref MyFirstSecurityGroup
+      InstanceType: t2.micro
+      Tags:
+        - Key: "Name"
+          Value: "MyFirstSecurity Group"
+      UserData: !Base64 |
+          #!/bin/bash
+          yum update -y
+          yum install python3 -y
+          pip3 install flask
+          cd /home/ec2-user/
+          wget https://raw.githubusercontent.com/serkangumus/clarusway-python-workshop/master/001-project-roman-numerals-converter/app.py
+          mkdir templates
+          cd templates
+          wget https://raw.githubusercontent.com/serkangumus/clarusway-python-workshop/master/001-project-roman-numerals-converter/templates/index.html
+          wget https://raw.githubusercontent.com/serkangumus/clarusway-python-workshop/master/001-project-roman-numerals-converter/templates/result.html
+          cd ..
+          python3 app.py
+  MyFirstSecurityGroup: 
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH and HTTP port access via port 22 and 80
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: "Name"
+          Value: "MyFirstSecurity Group"
+Outputs:
+  PublicDNS:
+    Description: Public DNSName of the newly created EC2 instance
+    Value:
+      Fn::GetAtt:
+      - EC2Instance
+      - PublicDnsName

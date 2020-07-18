@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turkish Identity Validation</title>
+  <title>TC Identity Validation</title>
+  <style>
+    body {
+      max-width: 600px;
+      margin: auto;
+    }
+    div {
+      margin-top: 100px;
+      margin-bottom: 50px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 15px;
+      margin: 20px 0;
+      display: inline-block;
+      border: none;
+      background: #b5e9b5;
+    }
+    button {
+      font-family: Cambria;
+      font-size: larger;
+      box-sizing: border-box;
+      background-color: #3d194f;
+      color: white;
+      padding: 16px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      opacity: 0.8;
+    }
+    .warning {
+      color: red;
+    }
+    .footnote {
+      color: rgba(0, 0, 255, 0.712);
+      font-size: 17px;
+    }
+    .enter {
+      font-family: Cambria;
+      font-size: larger;
+    }
+  </style>
+
+</head>
+<body>
+  <br>
+  <p class="enter">
+    Turkish ID Number has a couple of rules as;
+    <ol>
+      <li>It has to be 11 digits.</li>
+      <li>It can not start with 0</li>
+      <li>(sum of first 10 digits)%10 has to equal the 11th digits</li>
+      <li>[(sum of 1,3,5,7,9th digits)*7 – (sum of 2,4,6,8th digits)] % 10 has to equal the 10th digit.</li>
+    </ol>
+
+  </p>
+  <br>
+  <form action="/" method='POST'>
+    <p class="enter">Please Enter TC ID Number</p>
+    <input type="text" name="tcnumber" id="tcnumber">
+    <button type="submit">Enter TC Identity Number</button>
+  </form>
+  {% if not_valid %}
+  <p class="warning"><b>The Number you entered is not Valid! Please enter your TC ID number that has 11 digits. Please try again!</b></p>
+  {% endif %}
+
+  <p class="footnote"><i>This app is developed in Python by <b>{{ developer_name }}</b> and deployed with Flask on AWS
+    EC2 Instance using AWS Clouldformation Service.</i></p>
+
+</body>
+</html>
