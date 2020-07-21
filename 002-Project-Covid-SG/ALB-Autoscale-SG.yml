@@ -1,0 +1,157 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Create a load balanced, Auto Scaled project website where the instances are
+  locked down to only accept traffic from the load balancer. This template
+  creates an Auto Scaling group behind a Appliction load balancer(ALB) with a simple health
+  check. The web site is available on port 80, however, the instances can be
+  configured to listen on any port. **WARNING** This template creates one or more Amazon EC2 instances and an Elastic Load Balancer. You will be billed for the AWS resources used if you create a stack from this template."
+
+Parameters:
+  MyKeyName:
+    Description: The EC2 Key Pair to allow SSH access to the instance
+    Type: 'AWS::EC2::KeyPair::KeyName'
+
+Mappings:
+  Regions:
+    us-east-1: 
+      'ImageId': ami-08f3d892de259504d
+    us-east-2:
+      'ImageId': ami-016b213e65284e9c9
+  SubNets:
+    us-east-1:
+      'all': 
+        - subnet-9b8c70ba
+        - subnet-c5830288
+        - subnet-a57c8ffa
+        - subnet-b0f701d6
+        - subnet-f67c79c8
+        - subnet-0404ac0a
+    us-east-2:
+      'all':
+        - subnet-666f9e0d
+        - subnet-eb654b91
+        - subnet-f98117b5
+  DefaultVPC:
+    us-east-1:
+      'vpc': vpc-fa212380
+    us-east-2:
+      'vpc': vpc-7e488115
+
+Resources:
+  ApplicationLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties: 
+      SecurityGroups: 
+        - !Ref MyALBSecurityGroup
+      Subnets: !FindInMap
+        - SubNets
+        - !Ref AWS::Region
+        - all
+  
+  ElasticLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties: 
+      DefaultActions: 
+        - Type: forward
+          TargetGroupArn: !Ref ALBTargetGroup
+      LoadBalancerArn: !Ref ApplicationLoadBalancer
+      Port: 80
+      Protocol: HTTP
+  
+  ALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties: 
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 4
+      Port: 80
+      Protocol: HTTP
+      UnhealthyThresholdCount: 2
+      VpcId: !FindInMap
+        - DefaultVPC
+        - !Ref AWS::Region
+        - vpc
+  
+  AutoscalingWebServerGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties: 
+      DesiredCapacity: 2
+      HealthCheckType: ELB
+      HealthCheckGracePeriod: 90
+      LaunchConfigurationName: !Ref LaunchConfig
+      MaxSize: 3
+      MinSize: 1
+      Tags: 
+        - Key : "Name"
+          PropagateAtLaunch: True
+          Value : "MyAutoscaling Group"
+      VPCZoneIdentifier: !FindInMap
+        - SubNets
+        - !Ref 'AWS::Region'
+        - all
+  
+  LaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: ami-08f3d892de259504d
+      InstanceType: t2.micro
+      KeyName: !Ref MyKeyName
+      UserData: !Base64 |
+        #!/bin/bash
+        yum update -y
+        yum install python3 -y
+        pip3 install flask
+        cd /home/ec2-user/
+        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/001-Project-Tc-ID-SG/app.py
+        mkdir templates
+        cd templates
+        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/001-Project-Tc-ID-SG/templates/index.html
+        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/001-Project-Tc-ID-SG/templates/result.html
+        cd ..
+        python3 app.py
+      SecurityGroups:
+        - !Ref MyInstanceSecurityGroup
+
+  MyALBSecurityGroup: 
+    Type: AWS::EC2::SecurityGroup  #we are going to use EC2 word for also ELB Type
+    Properties:
+      GroupDescription: Enable HTTP port access via port 80
+      VpcId: !FindInMap
+        - DefaultVPC
+        - !Ref AWS::Region
+        - vpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: "Name"
+          Value: "MyALBSecurityGroup"
+  
+  MyInstanceSecurityGroup: 
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP and SSH port access via port 80 and 22
+      VpcId: !FindInMap
+        - DefaultVPC
+        - !Ref AWS::Region
+        - vpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: "Name"
+          Value: "MyInstanceSecurityGroup1"
+
+Outputs:
+  WebsiteURL:
+    Value: !Sub http://${ApplicationLoadBalancer.DNSName}
+    Description: Application URL
