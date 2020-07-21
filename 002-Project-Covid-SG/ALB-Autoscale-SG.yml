@@ -102,7 +102,9 @@ Resources:
         yum update -y
         yum install python3 -y
         pip3 install flask
+        pip3 install covid-19
         cd /home/ec2-user/
+        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/002-Project-Covid-SG/covid19.py
         wget https://raw.githubusercontent.com/serkangumus/My_projects/master/002-Project-Covid-SG/app.py
         mkdir templates
         cd templates
