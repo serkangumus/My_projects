@@ -103,11 +103,12 @@ Resources:
         yum install python3 -y
         pip3 install flask
         cd /home/ec2-user/
-        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/001-Project-Tc-ID-SG/app.py
+        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/002-Project-Covid-SG/app.py
         mkdir templates
         cd templates
-        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/001-Project-Tc-ID-SG/templates/index.html
-        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/001-Project-Tc-ID-SG/templates/result.html
+        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/002-Project-Covid-SG/templates/about.html
+        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/002-Project-Covid-SG/templates/error.html
+        wget https://raw.githubusercontent.com/serkangumus/My_projects/master/002-Project-Covid-SG/templates/index.html
         cd ..
         python3 app.py
       SecurityGroups:
