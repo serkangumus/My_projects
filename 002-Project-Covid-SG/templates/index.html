@@ -41,8 +41,9 @@
 {% for key in results %}
 <table>
     <tr>
-        <td style="font-size: .3in; color: crimson; width:100%; height: 20px;">{{key.upper()}}</td>
-        <td style="color: midnightblue; font-size: .25in;">{{results[key]}}</td>
+        <td style="font-size: .3in; color: crimson; column-width:300px;">{{key.upper()}}</td>
+        <td style="color: midnightblue; font-size: .25in;">:</td>
+        <td style="color: midnightblue; font-size: .25in; column-width: 200px;">{{results[key]}}</td>
     </tr>
 </table>
 
