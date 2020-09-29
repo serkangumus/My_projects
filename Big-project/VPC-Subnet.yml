@@ -80,22 +80,24 @@ Resources:
              - Key: Name
                Value: !Sub Web Server of ${AWS::StackName}
         UserData:
-          Fn::Base64: |
-              #! /bin/bash
-              yum update -y
-              yum install python3 -y
-              pip3 install flask
-              pip3 install flask_mysql
-              echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
-              cd /home/ec2-user
-              wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/app-with-mysql.py
-              mkdir templates
-              cd templates
-              wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/templates/emails.html
-              wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/templates/add-email.html
-              cd ..
-              python3 app-with-mysql.py
-            - MyDBURI: !GetAtt MyDatabaseServer.Endpoint.Address
+          Fn::Base64: 
+            !Sub
+              - |
+                #! /bin/bash
+                yum update -y
+                yum install python3 -y
+                pip3 install flask
+                pip3 install flask_mysql
+                echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
+                cd /home/ec2-user
+                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/app-with-mysql.py
+                mkdir templates
+                cd templates
+                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/templates/emails.html
+                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/templates/add-email.html
+                cd ..
+                python3 app-with-mysql.py
+              - MyDBURI: !GetAtt MyDatabaseServer.Endpoint.Address
 
   WebServerASG:
     Type: "AWS::AutoScaling::AutoScalingGroup"
@@ -153,7 +155,7 @@ Resources:
         - !Ref MyDBSecurityGroup
       Engine: MySQL
       EngineVersion: 8.0.20
-      MasterUserPassword: 123456789
+      MasterUserPassword: Serdar_1
       MasterUsername: admin
       MaxAllocatedStorage: 30
       PreferredBackupWindow: 03:00-04:00
