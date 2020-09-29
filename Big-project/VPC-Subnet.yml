@@ -86,15 +86,16 @@ Resources:
               yum install python3 -y
               pip3 install flask
               pip3 install flask_mysql
-              echo "${MyDatabaseServer.Endpoint.Address}" > /home/ec2-user/dbserver.endpoint
+              echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
               cd /home/ec2-user
-              wget https://raw.githubusercontent.com/serdarcw/clarusway-aws-eu-workshop/master/python/hands-on/flask-03-handling-forms-and-sql-on-ec2-linux2/app-with-mysql.py
+              wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/app-with-mysql.py
               mkdir templates
               cd templates
-              wget https://raw.githubusercontent.com/serdarcw/clarusway-aws-eu-workshop/master/python/hands-on/flask-03-handling-forms-and-sql-on-ec2-linux2/templates/emails.html
-              wget https://raw.githubusercontent.com/serdarcw/clarusway-aws-eu-workshop/master/python/hands-on/flask-03-handling-forms-and-sql-on-ec2-linux2/templates/add-email.html
+              wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/templates/emails.html
+              wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/templates/add-email.html
               cd ..
               python3 app-with-mysql.py
+            - MyDBURI: !GetAtt MyDatabaseServer.Endpoint.Address
 
   WebServerASG:
     Type: "AWS::AutoScaling::AutoScalingGroup"
