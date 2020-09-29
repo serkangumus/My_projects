@@ -122,7 +122,7 @@ Resources:
     Type: "AWS::RDS::DBSecurityGroup"
     Properties:
       DBSecurityGroupIngress: #required
-        - EC2SecurityGroupId: !GetAtt ALBSecurityGroup.GroupId
+        - EC2SecurityGroupId: !GetAtt WebServersSecGroup.GroupId
       EC2VpcId: !Ref VPC
       GroupDescription: ELB Access #required
 
