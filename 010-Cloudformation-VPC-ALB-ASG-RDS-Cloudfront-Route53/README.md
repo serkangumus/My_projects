@@ -1,4 +1,4 @@
-# Project-004 : Phonebook Application (Python Flask) deployed on AWS Application Load Balancer with Auto Scaling,  Relational Database Service(RDS), VPC's Components and Cloudfront with Route 53 using AWS Cloudformation
+# Project-502 : Phonebook Application (Python Flask) deployed on AWS Application Load Balancer with Auto Scaling,  Relational Database Service(RDS), VPC's Components and Cloudfront with Route 53 using AWS Cloudformation
 
 ## Description
 
@@ -102,7 +102,6 @@ In the architecture, you can configure your Cloudformation template using the fo
     - Name of ALB DNS Name
     
     - Phonebook Application Website URL should be given as output by Cloudformation Service, after the stack created.
-
 
 
 ## Project Skeleton 

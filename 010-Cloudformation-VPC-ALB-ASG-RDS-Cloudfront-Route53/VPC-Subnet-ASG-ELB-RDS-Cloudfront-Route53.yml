@@ -232,14 +232,54 @@ Resources:
                 pip3 install flask_mysql
                 echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
                 cd /home/ec2-user
-                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/app.py
+                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/010-Cloudformation-VPC-ALB-ASG-RDS-Cloudfront-Route53/app.py
                 mkdir templates
                 cd templates
-                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/templates/emails.html
-                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/Big-project/templates/add-email.html
+                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/010-Cloudformation-VPC-ALB-ASG-RDS-Cloudfront-Route53/templates/index.html
+                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/010-Cloudformation-VPC-ALB-ASG-RDS-Cloudfront-Route53/templates/delete.html
+                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/010-Cloudformation-VPC-ALB-ASG-RDS-Cloudfront-Route53/templates/add-update.html
                 cd ..
-                python3 app-with-mysql.py
+                python3 app.py
               - MyDBURI: !GetAtt MyDatabaseServer.Endpoint.Address
+
+  TemproraryInstance:
+  LogicalID:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: !FindInMap 
+          - AWSRegionArch2AMI
+          - !Ref 'AWS::Region'
+          - '64'
+      InstanceInitiatedShutdownBehavior: terminate
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+          - !GetAtt WebServersSecGroup.GroupId
+      SourceDestCheck: Boolean
+      SsmAssociations:
+        - SsmAssociation
+      SubnetId: String
+      Tags:
+        - Tag
+      Tenancy: String
+      UserData:
+          Fn::Base64: 
+            !Sub
+              - |
+                #! /bin/bash
+                yum update -y
+                yum install python3 -y
+                pip3 install flask
+                pip3 install flask_mysql
+                echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
+                cd /home/ec2-user
+                wget https://raw.githubusercontent.com/clarusway/cw-workshop/aws/pr-502/aws/projects/502-phonebook-capstone-project/init-phonebook-db.py?token=APB2ASEOKF4TBGGOWNIARBC7PXR2W
+                python3 app.py
+              - MyDBURI: !GetAtt MyDatabaseServer.Endpoint.Address
+
+  
+
+
 
   WebServerASG:
     Type: "AWS::AutoScaling::AutoScalingGroup"

@@ -1,17 +1,26 @@
-import mysql.connector
-from mysql.connector import errorcode
+# Import Flask modules
+from flask import Flask, request, render_template
+from flaskext.mysql import MySQL
 
-config = {
-  'user': 'admin',
-  'password': 'Callahan_1',
-  'host': 'phonebook-app-db.cbanmzptkrzf.us-east-1.rds.amazonaws.com',
-  'database': 'phonebook',
-  'raise_on_warnings': True
-}
+# Create an object named app
+app = Flask(__name__)
 
-# Write a function named `init_phonebook_db` which initializes the phonebook db
-# Create phonebook table within mysql db and populate with sample data
-def init_phonebook_db(cursor):
+db_endpoint = open("/home/ec2-user/dbserver.endpoint", 'r', encoding='UTF-8') 
+
+# Configure mysql database
+app.config['MYSQL_DATABASE_HOST'] = db_endpoint.readline().strip()
+app.config['MYSQL_DATABASE_USER'] = 'admin'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'Serdar_1'
+app.config['MYSQL_DATABASE_DB'] = 'phonebook'
+app.config['MYSQL_DATABASE_PORT'] = 3306
+db_endpoint.close()
+mysql = MySQL()
+mysql.init_app(app)
+connection = mysql.connect()
+connection.autocommit(True)
+cursor = connection.cursor()
+
+def init_phonebook_db():
     drop_table = 'DROP TABLE IF EXISTS phonebook.phonebook;'
     phonebook_table = """
     CREATE TABLE phonebook(
@@ -28,21 +37,9 @@ def init_phonebook_db(cursor):
         ("Sergio Taco", "67854"),
         ("Vincenzo Altobelli", "876543554");
     """
-    #cursor.execute(drop_table)
+    cursor.execute(drop_table)
     cursor.execute(phonebook_table)
     cursor.execute(data)
-
-try:
-  cnx = mysql.connector.connect(**config)
-  init_phonebook_db(cnx.cursor(buffered=True))
-  cnx.commit()
-except mysql.connector.Error as err:
-  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-    print("Something is wrong with your user name or password")
-  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-    print("Database does not exist")
-  else:
-    print(err)
-else:
-  print("Phonebook table created and populated with successfully")
-  cnx.close()
+  
+if __name__== '__main__':
+    init_phonebook_db()

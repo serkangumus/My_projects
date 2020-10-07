@@ -20,30 +20,6 @@ connection = mysql.connect()
 connection.autocommit(True)
 cursor = connection.cursor()
 
-# Write a function named `init_todo_db` which initializes the todo db
-# Create P table within sqlite db and populate with sample data
-# Execute the code below only once.
-def init_phonebook_db():
-    drop_table = 'DROP TABLE IF EXISTS phonebook.phonebook;'
-    phonebook_table = """
-    CREATE TABLE phonebook(
-    id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    number VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-    """
-    data = """
-    INSERT INTO phonebook.phonebook (name, number)
-    VALUES
-        ("Callahan", "1234567890"),
-        ("Sergio Taco", "67854"),
-        ("Vincenzo Altobelli", "876543554");
-    """
-    cursor.execute(drop_table)
-    cursor.execute(phonebook_table)
-    cursor.execute(data)
-
 # Write a function named `find_persons` which finds persons' record using the keyword from the phonebook table in the db,
 # and returns result as list of dictionary 
 # `[{'id': 1, 'name':'XXXX', 'number': 'XXXXXX'}]`.
