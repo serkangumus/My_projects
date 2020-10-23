@@ -243,7 +243,6 @@ Resources:
               - MyDBURI: !GetAtt MyDatabaseServer.Endpoint.Address
 
   TemproraryInstance:
-  LogicalID:
     Type: "AWS::EC2::Instance"
     Properties:
       ImageId: !FindInMap 
@@ -255,13 +254,10 @@ Resources:
       KeyName: !Ref KeyName
       SecurityGroupIds:
           - !GetAtt WebServersSecGroup.GroupId
-      SourceDestCheck: Boolean
-      SsmAssociations:
-        - SsmAssociation
-      SubnetId: String
+      SubnetId: !Ref PublicSubnetA
       Tags:
-        - Tag
-      Tenancy: String
+        - Key: Name
+          Value: Temprorary Instance
       UserData:
           Fn::Base64: 
             !Sub
@@ -273,12 +269,10 @@ Resources:
                 pip3 install flask_mysql
                 echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
                 cd /home/ec2-user
-                wget https://raw.githubusercontent.com/clarusway/cw-workshop/aws/pr-502/aws/projects/502-phonebook-capstone-project/init-phonebook-db.py?token=APB2ASEOKF4TBGGOWNIARBC7PXR2W
-                python3 app.py
+                wget https://raw.githubusercontent.com/serdarcw/My_projects/master/010-Cloudformation-VPC-ALB-ASG-RDS-Cloudfront-Route53/init-phonebook-db.py
+                python3 init-phonebook-db.py
+                echo "sudo halt" | at now + 10 min
               - MyDBURI: !GetAtt MyDatabaseServer.Endpoint.Address
-
-  
-
 
 
   WebServerASG:
