@@ -1,0 +1,21 @@
+Portfolio Building Session
+10/20/2020
+
+Project-203: Docker Swarm Deployment of Phonebook Application (Python Flask) with 
+
+Instructor: Serdar
+
+- Infrastructure
+
+    - Public Repository on GitHub (Codebase, Versioning System)
+    - Docker Swarm as Orchestrator
+        - 3 Managers
+        - 2 workers
+    - Image Repository (AWS ECR)
+    - Should be able to
+        - talk to each other (EC2 Connect CLI, IAM Policy)
+        - talk to ECR (AWS CLI, ECR Credential Helper, IAM Policy/Roles)
+    
+- Application Deployment
+    - Python Flask
+    - MySQL
