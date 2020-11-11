@@ -14,7 +14,7 @@ Instructor: Serdar
     - Image Repository (AWS ECR)
     - Should be able to
         - talk to each other (EC2 Connect CLI, IAM Policy)
-        - talk to ECR (AWS CLI, ECR Credential Helper, IAM Policy/Roles)
+        - talk to ECR (AWS CLI, ECR Credential Helper, IAM Policy)
     
 - Application Deployment
     - Python Flask
