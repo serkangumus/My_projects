@@ -1,0 +1,25 @@
+pipeline{
+    agent { label "master" }
+    environment{
+
+
+    }
+    stages{
+        stage('Create ECR Repo')
+        stage('Build App Docker Image')
+        stage('Push the Image the ECR Repo')
+        stage('Cretae Infrastructure for the App')
+        stage('Test the Infrastructure')
+        stage('Deploy the App on Docker Swarm')
+    }
+    post{
+        always{
+            echo 'Delete all local docker images'
+        }
+        failure{
+            echo 'Delete the image Repository on ECR due the failure'
+            echo 'Delete the cloudformation Stack due to the failure'
+        }
+    }
+
+}

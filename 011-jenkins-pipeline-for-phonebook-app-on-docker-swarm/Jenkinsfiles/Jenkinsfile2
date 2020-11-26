@@ -1,0 +1,60 @@
+pipeline {
+    agent {
+        label 'master'
+    }
+    
+    stages {
+        stage('creating ECR Repository') {
+            steps {
+                echo 'creating ECR Repository'
+                echo "Build number is ${BUILD_NUMBER}"
+                echo "Workspace path is ${WORKSPACE}"
+            }
+        }
+        stage('building Docker Image') {
+            steps {
+                echo 'building Docker Image'
+            }
+        }
+        stage('pushing Docker image to ECR Repository') {
+            steps {
+                echo 'pushing Docker image to ECR Repository'
+            }
+        }
+        stage('creating infrastructure for the Application') {   
+            steps {
+                echo 'creating infrastructure for the Application'
+                script{
+                    int counter=0;
+                    while (counter < 4) {
+                        println('Counting...' +counter);
+                        sleep(2)
+                        counter++;
+                    }
+                }
+            }
+        }
+        stage('deploying the Application') {
+            steps {
+                echo 'deploying the Application'
+                sh 'pwd'
+                sh 'ls -al'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Goodbye ALL... Please come back soon'
+        }
+        failure {
+            echo 'Sorry but you messed up...'
+        }
+        success {
+            echo 'You are the man/woman...'
+        }
+    }
+}
+
+
+---> reating infrastructure for the Application aşamasında her seferinde cloudformation ayağa kalkması lazım. ki bunun için cloudformation full accsess policy vermemiz gerekir. 
+---> http://<Jenkins_server_DNS_Name>:8080/env-vars.html/

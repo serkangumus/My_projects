@@ -1,0 +1,106 @@
+pipeline {
+    agent {
+        label 'master'
+    }
+    environment {
+        APP_NAME="App-${BUILD_NUMBER}"
+        OWNER="Serdar"
+    }
+    
+    stages {
+        stage('creating ECR Repository') {
+            steps {
+                echo 'creating ECR Repository'
+                echo "Application number is ${APP_NAME}"
+                echo "Workspace path is ${WORKSPACE}"
+                echo "Owner of this stage is ${OWNER}"
+                // create ECR REPOSİTORY
+            }
+        }
+        stage('building Docker Image') {
+            steps {
+                echo 'building Docker Image'
+                //sh 'docker build'
+            }
+        }
+        stage('pushing Docker image to ECR Repository') {
+            steps {
+                echo 'pushing Docker image to ECR Repository'
+                //sh 'aws get-login-password ...'
+                //sh 'docker push'
+            }
+        }
+        stage('creating infrastructure for the Application') {   
+            steps {
+                echo 'creating infrastructure for the Application'
+                //sh 'aws cloudformation create stace'
+                script{
+                    int counter=0;
+                    while (counter < 4) {
+                        println('Counting...' +counter);
+                        sleep(2)
+                        counter++;
+                        //sh 'aws ec2 describe ... try to get IP adress' get IP and control if stack stand or not using this IP
+                    }
+                }
+            }
+        }
+        stage('test the vizz App') {   
+            steps {
+                echo 'creating infrastructure for the Application'
+                //sh 'aws cloudformation create stace'
+                script{
+                    int counter=0;
+                    while (counter < 4) {
+                        println('Counting...' +counter);
+                        sleep(2)
+                        counter++;
+                        //try catch block with groovysh 
+                        // 'curl ip:8080 ...' break
+                        // failure ... sleep (5) (ip.lenght 7)
+                    }
+                }
+            }
+        }
+        stage('deploying the Application') {
+            steps {
+                echo 'deploying the Application'
+                sh 'pwd'
+                sh 'ls -al'
+                // mssh ....
+            }
+        }
+        stage('test phonebook Application') {
+            steps {
+                echo 'creating infrastructure for the Application'
+                //sh 'aws cloudformation create stace'
+                script{
+                    int counter=0;
+                    while (counter < 4) {
+                        println('Counting...' +counter);
+                        sleep(2)
+                        counter++;
+                        //try catch block with groovysh 
+                        // 'curl ip:8080 ...' break
+                        // failure ... sleep (5) (ip.lenght 7)
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Goodbye ALL... Please come back soon'
+        }
+        failure {
+            echo 'Sorry but you messed up...'
+        }
+        success {
+            echo 'You are the man/woman...'
+        }
+    }
+}
+
+
+---> reating infrastructure for the Application aşamasında her seferinde cloudformation ayağa kalkması lazım. ki bunun için cloudformation full accsess policy vermemiz gerekir. 
+---> http://<Jenkins_server_DNS_Name>:8080/env-vars.html/
