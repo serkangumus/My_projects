@@ -82,8 +82,8 @@ Mappings:
       '64': ami-01fee56b22f308154
     eu-central-1:
       '64': ami-00a205cb8e06c3c4e
-    eu-central-1:
-      '64': ami-0bb3fad3c0286ebd5  
+    # eu-central-1:
+    #   '64': ami-0bb3fad3c0286ebd5  
 
 Resources:
   PhonebookCertificate:
